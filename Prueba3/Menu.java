@@ -1,12 +1,20 @@
 package Prueba3;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Menu {
 	static Scanner scanner = new Scanner(System.in);
 	public static void main(String[] args) { 
 		int opcion;
-			registro();
+		Practica3Conectores repository = null;
+			do {
+				try {
+					repository = registro();
+				} catch (Exception e) {
+					System.out.println("Usuario contraseÃ±a o base incorrectos o no tienes el mysql abierto");
+				}
+		} while (repository == null);
 		do {
 			menu();
 			opcion = scanner.nextInt();
@@ -15,38 +23,38 @@ public class Menu {
 			case 0: System.out.println("Exit..");
 					break;
 			case 1: System.out.println("-Insertar cliente-");
-					System.out.println("¿Cual es su Nombre?");
+					System.out.println("ï¿½Cual es su Nombre?");
 					String nombreCliente = scanner.nextLine();
-					System.out.println("¿Cual es su Apellidos?");
+					System.out.println("ï¿½Cual es su Apellidos?");
 					String apellidosCliente = scanner.nextLine();
-					System.out.println("¿Cual es su NIF?");
+					System.out.println("ï¿½Cual es su NIF?");
 					String nifCliente = scanner.nextLine();
-		 			Practica3Conectores.addClient(nombreCliente,apellidosCliente,nifCliente);
+					repository.addClient(nombreCliente,apellidosCliente,nifCliente);
 		 			break;
 			case 2: System.out.println("Modificar Cliente");
 					System.out.println("Introduce NIF");
 					String nifBusqueda = scanner.nextLine();
 					System.out.println("Introduce su nuevo nombre");
 					String nameModif = scanner.nextLine();
-					Practica3Conectores.modifClient(nifBusqueda,nameModif);
+					repository.modifClient(nifBusqueda,nameModif);
 					break;
 			case 3: System.out.println("Listar clientes");
-					System.out.println(Practica3Conectores.listClient());
+					System.out.println(repository.listClient());
 					break;
 			case 4: System.out.println("Consultar cliente por nif/dni");
 					int nifClient = scanner.nextInt();
-					System.out.println(Practica3Conectores.consultClient(nifClient));
+					System.out.println(repository.consultClient(nifClient));
 					break;
 			case 5: System.out.println("Insertar vehiculo");
-					System.out.println("¿Cual es su Matricula?");
+					System.out.println("ï¿½Cual es su Matricula?");
 					String matriculaVehiculo = scanner.nextLine();
-					System.out.println("¿Cual es su Marca?");
+					System.out.println("ï¿½Cual es su Marca?");
 					String marcaVehiculo = scanner.nextLine();
-					System.out.println("¿Cual es su Color?");
+					System.out.println("ï¿½Cual es su Color?");
 					String colorVehiculo = scanner.nextLine();
-					System.out.println("¿Cual es su Precio?");
+					System.out.println("ï¿½Cual es su Precio?");
 					float precioVehiculo = scanner.nextFloat();
-					Practica3Conectores.addVehiculo(matriculaVehiculo,marcaVehiculo,colorVehiculo,precioVehiculo);break;
+					repository.addVehiculo(matriculaVehiculo,marcaVehiculo,colorVehiculo,precioVehiculo);break;
 			case 6: System.out.println("Modificar vehiculo");
 					System.out.println("Introduce su matricula");
 					String matriculaList = scanner.nextLine();
@@ -54,40 +62,41 @@ public class Menu {
 					String colorModif = scanner.nextLine();
 					System.out.println("Introduce su nuevo precio");
 					Float precioModif = scanner.nextFloat();
-					Practica3Conectores.modifVehiculo(matriculaList,colorModif,precioModif);break;
+					repository.modifVehiculo(matriculaList,colorModif,precioModif);break;
 			case 7: System.out.println("Listar vehiculos");
-					System.out.println(Practica3Conectores.listVehiculos());break;
+					System.out.println(repository.listVehiculos());break;
 			case 8: System.out.println("Consultar vehiculo por matricula ->Inserta matricula");
 					String matriculaSeek = scanner.nextLine();
-					System.out.println(Practica3Conectores.seekVehiculo(matriculaSeek));break;
+					System.out.println(repository.seekVehiculo(matriculaSeek));break;
 			case 10:System.out.println("Consultar vehiculos por marca ->Introduce marca");
 					String marcaSeek = scanner.nextLine();
-					System.out.println(Practica3Conectores.listVehiculosMarca(marcaSeek));break;		 
+					System.out.println(repository.listVehiculosMarca(marcaSeek));break;		 
 			case 11:System.out.println("Insertar venta");
 					int idVenta = scanner.nextInt();
 					String matriculaVenta = scanner.nextLine();
 					String nifVenta = scanner.nextLine();
 					int descuentoVenta = scanner.nextInt();
 					String fechaVenta = scanner.nextLine();
-					Practica3Conectores.addVenta(idVenta,matriculaVenta,nifVenta,descuentoVenta,fechaVenta);break;
+					repository.addVenta(idVenta,matriculaVenta,nifVenta,descuentoVenta,fechaVenta);break;
 			case 12:System.out.println("Listar ventas");
-					System.out.println(Practica3Conectores.listVentas());
+					System.out.println(repository.listVentas());
 					break;
-			case 13:System.out.println("Buscar ventas de un dia concreto ->Inserta DiaMesAño");
+			case 13:System.out.println("Buscar ventas de un dia concreto ->Inserta DiaMesAï¿½o");
 					String fechaSeek = scanner.nextLine();
-					System.out.println(Practica3Conectores.listVentasDia(fechaSeek));
+					System.out.println(repository.listVentasDia(fechaSeek));
+					break;
 			default:System.out.println("**OPCION NO VALIDA**");
 			}
 		} while (opcion != 0);
 	}
-	private static void registro() {
+	private static Practica3Conectores registro() throws SQLException{
 		System.out.println("Mete usuario");
 		String usuario = scanner.nextLine();
 		System.out.println("Mete password");
 		String password = scanner.nextLine();
 		System.out.println("Introduce la base de datos");
 		String baseDeDatos = scanner.nextLine();
-		Practica3Conectores.registro(baseDeDatos,usuario,password);
+		return new Practica3Conectores(baseDeDatos,usuario,password);
 	}
 	public static void menu() {
 		System.out.println("-------------------------Clientes------------------------");
